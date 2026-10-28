@@ -10,6 +10,8 @@
     nav a { color: #fff; margin-right: 18px; text-decoration: none; }
     main { max-width: 900px; margin: 24px auto; padding: 0 16px; }
     .msg { padding: 10px 14px; border-radius: 6px; margin-bottom: 12px; background: #e8f0fe; }
+    .msg.success { background: #e6f4ea; }
+    .msg.warning { background: #fef7e0; }
     .msg.error { background: #fde8e8; }
   </style>
 </head>
@@ -20,7 +22,7 @@
   </nav>
   <main>
     {% if messages %}
-      {% for m in messages %}<div class="msg {{ m.tags }}">{{ m }}</div>{% endfor %}
+      {% for m in messages %}<div class="msg {{ m.tags }}" role="status">{{ m }}</div>{% endfor %}
     {% endif %}
     {% block content %}{% endblock %}
   </main>

@@ -1,0 +1,9 @@
+{% comment %}Inline validation errors for any Django form (SRS 3.1). Use: {% include "partials/form_errors.html" with form=form %}{% endcomment %}
+{% if form.non_field_errors %}
+  <div class="msg error" role="alert">{% for e in form.non_field_errors %}{{ e }} {% endfor %}</div>
+{% endif %}
+{% for field in form %}
+  {% if field.errors %}
+    <div class="msg error" role="alert"><strong>{{ field.label }}:</strong> {% for e in field.errors %}{{ e }} {% endfor %}</div>
+  {% endif %}
+{% endfor %}
