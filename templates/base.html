@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}SmartSpend{% endblock %}</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 0; background: #f6f7fb; color: #1a1a2e; }
+    nav { background: #1a1a2e; padding: 12px 24px; }
+    nav a { color: #fff; margin-right: 18px; text-decoration: none; }
+    main { max-width: 900px; margin: 24px auto; padding: 0 16px; }
+    .msg { padding: 10px 14px; border-radius: 6px; margin-bottom: 12px; background: #e8f0fe; }
+    .msg.error { background: #fde8e8; }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="{% url 'home' %}">SmartSpend</a>
+    {# Feature owners: add links here (Expenses, Budgets, Reports, Login) #}
+  </nav>
+  <main>
+    {% if messages %}
+      {% for m in messages %}<div class="msg {{ m.tags }}">{{ m }}</div>{% endfor %}
+    {% endif %}
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>
