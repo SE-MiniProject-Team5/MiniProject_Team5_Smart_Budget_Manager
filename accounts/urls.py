@@ -1,3 +1,5 @@
 from django.urls import path
-
-urlpatterns = []
+from .views import RegisterView
+urlpatterns = [
+path("auth/register/", RegisterView.as_view(), name="auth-register"),
+]
