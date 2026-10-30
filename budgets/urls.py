@@ -1,3 +1,8 @@
+
 from django.urls import path
 
-urlpatterns = []
+from .views import BudgetListCreateView
+
+urlpatterns = [
+    path("budgets/", BudgetListCreateView.as_view(), name="budget-list-create"),
+]
