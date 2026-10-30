@@ -10,6 +10,7 @@ This document records deviations from the original project plan and requirements
 | DEV-04 | Use the originally planned UI approach | Django templates are used alongside a REST API | This supports server-rendered pages and API endpoints. |
 | DEV-05 | Use only the fields listed in the original SAD for the User model | The User model includes a `username` field | This field supports user identification and authentication. |
 | DEV-06 | Use the originally planned database configuration in all environments | SQLite is used for local development and CI, while PostgreSQL is configured through Docker Compose | This allows a lightweight local setup and a PostgreSQL containerized environment. |
+| 7 | SAD s8 (API Design) | Paths written without a trailing slash, e.g. /api/v1/auth/register | Paths end with a slash, e.g. /api/v1/auth/register/ | Django's URL convention (APPEND_SLASH) |
 
 ## Maintenance
 
