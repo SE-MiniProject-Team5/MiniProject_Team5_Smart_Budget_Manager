@@ -86,3 +86,34 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# SEC-005: Security event logging
+(BASE_DIR / "logs").mkdir(exist_ok=True)
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "security": {
+            "format": "%(asctime)s %(levelname)s %(message)s",
+        },
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "security",
+        },
+        "security_file": {
+            "class": "logging.FileHandler",
+            "filename": BASE_DIR / "logs" / "security.log",
+            "formatter": "security",
+        },
+    },
+    "loggers": {
+        "security": {
+            "handlers": ["console", "security_file"],
+            "level": "INFO",
+            "propagate": True,
+        },
+    },
+}
