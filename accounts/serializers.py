@@ -8,3 +8,8 @@ class RegisterSerializer(serializers.Serializer):
     def validate_password(self, value):
         validate_password(value) # Django validators from settings.py: at least 8 characters
         return value
+class LoginSerializer(serializers.Serializer):
+    """Checks the JSON sent to POST /api/v1/auth/login/ (FR-003). Only the
+    shape is checked here."""
+    email = serializers.EmailField()
+    password = serializers.CharField(write_only=True, trim_whitespace=False)

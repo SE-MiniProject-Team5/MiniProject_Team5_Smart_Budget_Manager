@@ -76,7 +76,12 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 REST_FRAMEWORK = {
-    "DEFAULT_RENDERER_CLASSES": ["rest_framework.renderers.JSONRenderer"],
+"DEFAULT_RENDERER_CLASSES": ["rest_framework.renderers.JSONRenderer"],
+# SEC-004: API calls log in with "Authorization: Bearer <token>". Session login stays for the web pages.
+"DEFAULT_AUTHENTICATION_CLASSES": [
+"accounts.authentication.BearerTokenAuthentication",
+"rest_framework.authentication.SessionAuthentication",
+],
 }
 
 LANGUAGE_CODE = "en-us"
