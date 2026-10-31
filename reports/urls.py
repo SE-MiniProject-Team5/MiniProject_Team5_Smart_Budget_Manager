@@ -1,3 +1,8 @@
 from django.urls import path
 
-urlpatterns = []
+from .views import CategoryBreakdownView
+
+
+urlpatterns = [
+    path("analytics/", CategoryBreakdownView.as_view(), name="analytics-breakdown"),
+]
