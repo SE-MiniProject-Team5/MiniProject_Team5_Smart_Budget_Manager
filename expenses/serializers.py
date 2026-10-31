@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Expense
+from .models import Category, Expense
 from .services import category_problem
 
 
@@ -17,3 +17,23 @@ class ExpenseSerializer(serializers.ModelSerializer):
         if problem:
             raise serializers.ValidationError(problem)
         return category
+
+
+class CategorySerializer(serializers.ModelSerializer):
+    """Predefined and custom categories (FR-007). name <= 50 characters comes from the model."""
+
+    is_custom = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Category
+        fields = ["id", "name", "is_custom"]
+        read_only_fields = ["id"]
+
+    def get_is_custom(self, category):
+        return category.owner_id is not None
+
+    def validate_name(self, value):
+        value = value.strip()
+        if not value:
+            raise serializers.ValidationError("Category name cannot be blank.")
+        return value
