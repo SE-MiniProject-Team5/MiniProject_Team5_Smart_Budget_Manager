@@ -1,40 +1,66 @@
-
-from rest_framework import status
+from rest_framework import generics, status
+from rest_framework.exceptions import APIException
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-from rest_framework.views import APIView
 
+from .models import Budget
+from .permissions import IsOwner
 from .serializers import BudgetSerializer
-from .services import has_overlapping_budget
+from .services import overlaps_existing
 
 
-class BudgetListCreateView(APIView):
-    """Create budgets while preventing overlapping periods."""
+class BudgetConflict(APIException):
+    """HTTP 409 for an overlapping budget period (SAD 9.1)."""
 
+    status_code = status.HTTP_409_CONFLICT
+    default_detail = (
+        "A budget for this category already covers part of this period."
+    )
+    default_code = "budget_overlap"
+
+
+class BudgetListCreateView(generics.ListCreateAPIView):
+    """GET lists the caller's budgets; POST creates one (FR-009, FR-012)."""
+
+    serializer_class = BudgetSerializer
     permission_classes = [IsAuthenticated]
 
-    def post(self, request):
-        serializer = BudgetSerializer(
-            data=request.data,
-            context={"request": request},
-        )
+    def get_queryset(self):
+        return self.request.user.budgets.order_by("-start_date")
 
-        serializer.is_valid(raise_exception=True)
-
-        if has_overlapping_budget(
-            user=request.user,
-            category=serializer.validated_data["category"],
-            period=serializer.validated_data["period"],
-            start_date=serializer.validated_data["start_date"],
+    def perform_create(self, serializer):
+        data = serializer.validated_data
+        if overlaps_existing(
+            self.request.user,
+            data["category"],
+            data["period"],
+            data["start_date"],
         ):
-            return Response(
-                {"detail": "An overlapping budget already exists."},
-                status=status.HTTP_409_CONFLICT,
-            )
+            raise BudgetConflict()
+        serializer.save(user=self.request.user)
 
-        budget = serializer.save(user=request.user)
 
-        return Response(
-            BudgetSerializer(budget).data,
-            status=status.HTTP_201_CREATED,
-        )
+class BudgetDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """GET, PUT, PATCH, DELETE /api/v1/budgets/<id>/ for the owner only."""
+
+    queryset = Budget.objects.all()
+    serializer_class = BudgetSerializer
+    permission_classes = [IsAuthenticated, IsOwner]
+
+    def perform_update(self, serializer):
+        budget = serializer.instance
+        data = serializer.validated_data
+
+        category = data.get("category", budget.category)
+        period = data.get("period", budget.period)
+        start = data.get("start_date", budget.start_date)
+
+        if overlaps_existing(
+            self.request.user,
+            category,
+            period,
+            start,
+            exclude_id=budget.id,
+        ):
+            raise BudgetConflict()
+
+        serializer.save()
