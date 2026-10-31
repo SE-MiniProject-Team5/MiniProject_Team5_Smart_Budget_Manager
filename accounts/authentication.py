@@ -23,7 +23,7 @@ class BearerTokenAuthentication(BaseAuthentication):
         except (signing.BadSignature, UnicodeError, ValueError,
             User.DoesNotExist):
             self._reject(request)
-            return (user, None)
+        return (user, None)
     def authenticate_header(self, request):
         # Makes DRF answer 401 (not 403) when a protected endpoint gets no valid token.
         return self.keyword
