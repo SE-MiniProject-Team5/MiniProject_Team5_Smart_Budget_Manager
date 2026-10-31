@@ -1,8 +1,12 @@
-
 """Budget business rules (SAD 3.1 Budget Service): period end dates and the
 overlap rule (FR-012)."""
 import calendar
 from datetime import timedelta
+from decimal import Decimal
+
+from django.db.models import Sum
+
+from expenses.models import Expense
 
 from .models import Budget
 
@@ -44,6 +48,15 @@ def category_problem(category, user):
     return None
 
 
-def has_overlapping_budget(user, category, period, start_date):
-    """Backward-compatible wrapper for the original budget creation view."""
-    return overlaps_existing(user, category, period, start_date)
+def spent_for(budget):
+    """Cumulative spend against a budget (FR-011): the owner's expenses in
+    that category whose date falls inside the budget period. Computed from
+    the database on every request, so a newly saved expense is reflected
+    immediately (NFR-002: within 1 second)."""
+    total = Expense.objects.filter(
+        user_id=budget.user_id,
+        category_id=budget.category_id,
+        expense_date__gte=budget.start_date,
+        expense_date__lte=end_date(budget.period, budget.start_date),
+    ).aggregate(total=Sum("amount"))["total"]
+    return total or Decimal("0.00")
