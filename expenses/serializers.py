@@ -2,6 +2,7 @@ from rest_framework import serializers
 
 from .models import Category, Expense
 from .services import category_problem
+from .validators import clean_text
 
 
 class ExpenseSerializer(serializers.ModelSerializer):
@@ -18,6 +19,9 @@ class ExpenseSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(problem)
         return category
 
+    def validate_note(self, value):
+        return clean_text(value)  # SEC-003
+
 
 class CategorySerializer(serializers.ModelSerializer):
     """Predefined and custom categories (FR-007). name <= 50 characters comes from the model."""
@@ -33,7 +37,7 @@ class CategorySerializer(serializers.ModelSerializer):
         return category.owner_id is not None
 
     def validate_name(self, value):
-        value = value.strip()
+        value = clean_text(value)  # SEC-003
         if not value:
             raise serializers.ValidationError("Category name cannot be blank.")
         return value
