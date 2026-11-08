@@ -42,3 +42,12 @@ def spend_trend(user, start, end, granularity):
         totals[bucket] = totals.get(bucket, Decimal("0.00")) + daily.get(day, Decimal("0.00"))
         day += timedelta(days=1)
     return [{"period_start": bucket, "total": f"{total:.2f}"} for bucket, total in totals.items()]
+
+
+def expenses_for_export(user, start, end):
+    """The user's expenses in the range, oldest first, for the CSV export (FR-018)."""
+    return (
+        Expense.objects.filter(user=user, expense_date__gte=start, expense_date__lte=end)
+        .select_related("category")
+        .order_by("expense_date", "created_at")
+    )
