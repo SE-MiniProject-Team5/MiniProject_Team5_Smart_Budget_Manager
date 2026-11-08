@@ -112,3 +112,12 @@ class AdminCategoryDetailView(generics.RetrieveUpdateAPIView):
 
     def get_queryset(self):
         return Category.objects.filter(owner__isnull=True)
+
+
+class AdminAnalyticsView(APIView):
+    """GET /api/v1/admin/analytics/ -> anonymised system usage totals (FR-020). Admins only."""
+
+    permission_classes = [IsAuthenticated, IsAdminRole]
+
+    def get(self, request):
+        return Response(services.admin_usage_stats())

@@ -1,6 +1,7 @@
 from django.urls import path
 
 from .views import (
+    AdminAnalyticsView,
     AdminCategoryDetailView,
     AdminCategoryListCreateView,
     CategoryBreakdownView,
@@ -14,4 +15,5 @@ urlpatterns = [
     path("reports/export/", ExportCsvView.as_view(), name="reports-export"),
     path("admin/categories/", AdminCategoryListCreateView.as_view(), name="admin-category-list"),
     path("admin/categories/<uuid:pk>/", AdminCategoryDetailView.as_view(), name="admin-category-detail"),
+    path("admin/analytics/", AdminAnalyticsView.as_view(), name="admin-analytics"),
 ]
