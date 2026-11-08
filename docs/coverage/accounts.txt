@@ -1,0 +1,16 @@
+Name                                  Stmts   Miss Branch BrPart  Cover
+-----------------------------------------------------------------------
+accounts\__init__.py                      0      0      0      0   100%
+accounts\admin.py                         1      0      0      0   100%
+accounts\apps.py                          4      0      0      0   100%
+accounts\authentication.py               25      0      4      0   100%
+accounts\migrations\0001_initial.py       9      0      0      0   100%
+accounts\migrations\__init__.py           0      0      0      0   100%
+accounts\models.py                       14      0      0      0   100%
+accounts\serializers.py                  17      0      0      0   100%
+accounts\services.py                     15      0      4      0   100%
+accounts\tokens.py                        8      0      0      0   100%
+accounts\urls.py                          3      0      0      0   100%
+accounts\views.py                        35      0      2      0   100%
+-----------------------------------------------------------------------
+TOTAL                                   131      0     10      0   100%
