@@ -1,5 +1,7 @@
+import csv
 from datetime import date
 
+from django.http import HttpResponse
 from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -63,6 +65,31 @@ class SpendTrendView(APIView):
         return Response({"from": start, "to": end, "granularity": granularity, "points": points})
 
 
+def safe_cell(text):
+    """Stops spreadsheet formula injection: a cell starting with = + - or @ gets a ' in front."""
+    return "'" + text if text[:1] in ("=", "+", "-", "@") else text
+
+
+class ExportCsvView(APIView):
+    """GET /api/v1/reports/export/?from=...&to=... -> a CSV file of the caller's expenses (FR-018)."""
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        start, end, error = date_range(request)
+        if error:
+            return error
+        response = HttpResponse(content_type="text/csv")
+        response["Content-Disposition"] = f'attachment; filename="smartspend_{start}_{end}.csv"'
+        writer = csv.writer(response)
+        writer.writerow(["date", "category", "amount", "note"])
+        for expense in services.expenses_for_export(request.user, start, end):
+            writer.writerow(
+                [expense.expense_date, safe_cell(expense.category.name), expense.amount, safe_cell(expense.note)]
+            )
+        return response
+
+
 class AdminCategoryListCreateView(generics.ListCreateAPIView):
     """GET lists every master (predefined) category, active or not; POST adds one (FR-019). Admins only."""
 
@@ -85,3 +112,12 @@ class AdminCategoryDetailView(generics.RetrieveUpdateAPIView):
 
     def get_queryset(self):
         return Category.objects.filter(owner__isnull=True)
+
+
+class AdminAnalyticsView(APIView):
+    """GET /api/v1/admin/analytics/ -> anonymised system usage totals (FR-020). Admins only."""
+
+    permission_classes = [IsAuthenticated, IsAdminRole]
+
+    def get(self, request):
+        return Response(services.admin_usage_stats())
