@@ -1,11 +1,15 @@
 from datetime import date
 
-from rest_framework import status
+from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from expenses.models import Category
+from smartspend.permissions import IsAdminRole
+
 from . import services
+from .serializers import AdminCategorySerializer
 
 MAX_TREND_DAYS = 366
 
@@ -57,3 +61,27 @@ class SpendTrendView(APIView):
             return Response({"detail": "The range can be at most 366 days."}, status=status.HTTP_400_BAD_REQUEST)
         points = services.spend_trend(request.user, start, end, granularity)
         return Response({"from": start, "to": end, "granularity": granularity, "points": points})
+
+
+class AdminCategoryListCreateView(generics.ListCreateAPIView):
+    """GET lists every master (predefined) category, active or not; POST adds one (FR-019). Admins only."""
+
+    serializer_class = AdminCategorySerializer
+    permission_classes = [IsAuthenticated, IsAdminRole]
+
+    def get_queryset(self):
+        return Category.objects.filter(owner__isnull=True).order_by("name")
+
+
+class AdminCategoryDetailView(generics.RetrieveUpdateAPIView):
+    """GET, PUT, PATCH /api/v1/admin/categories/<id>/ (FR-019). Admins only.
+
+    Disable a category with {"is_active": false}. It is never deleted, so the
+    expenses already using it stay intact (SRS 6.5 business rule).
+    """
+
+    serializer_class = AdminCategorySerializer
+    permission_classes = [IsAuthenticated, IsAdminRole]
+
+    def get_queryset(self):
+        return Category.objects.filter(owner__isnull=True)
