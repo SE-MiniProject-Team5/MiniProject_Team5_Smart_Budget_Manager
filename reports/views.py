@@ -1,5 +1,7 @@
+import csv
 from datetime import date
 
+from django.http import HttpResponse
 from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -61,6 +63,31 @@ class SpendTrendView(APIView):
             return Response({"detail": "The range can be at most 366 days."}, status=status.HTTP_400_BAD_REQUEST)
         points = services.spend_trend(request.user, start, end, granularity)
         return Response({"from": start, "to": end, "granularity": granularity, "points": points})
+
+
+def safe_cell(text):
+    """Stops spreadsheet formula injection: a cell starting with = + - or @ gets a ' in front."""
+    return "'" + text if text[:1] in ("=", "+", "-", "@") else text
+
+
+class ExportCsvView(APIView):
+    """GET /api/v1/reports/export/?from=...&to=... -> a CSV file of the caller's expenses (FR-018)."""
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        start, end, error = date_range(request)
+        if error:
+            return error
+        response = HttpResponse(content_type="text/csv")
+        response["Content-Disposition"] = f'attachment; filename="smartspend_{start}_{end}.csv"'
+        writer = csv.writer(response)
+        writer.writerow(["date", "category", "amount", "note"])
+        for expense in services.expenses_for_export(request.user, start, end):
+            writer.writerow(
+                [expense.expense_date, safe_cell(expense.category.name), expense.amount, safe_cell(expense.note)]
+            )
+        return response
 
 
 class AdminCategoryListCreateView(generics.ListCreateAPIView):
