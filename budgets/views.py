@@ -1,10 +1,12 @@
 from rest_framework import generics, status
 from rest_framework.exceptions import APIException
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
-from .models import Budget
+from .models import Alert, Budget
 from .permissions import IsOwner
-from .serializers import BudgetSerializer
+from .serializers import AlertSerializer, BudgetSerializer
 from .services import overlaps_existing
 
 
@@ -64,3 +66,37 @@ class BudgetDetailView(generics.RetrieveUpdateDestroyAPIView):
             raise BudgetConflict()
 
         serializer.save()
+
+
+class AlertListView(generics.ListAPIView):
+    """GET /api/v1/alerts/ -> the caller's active (unacknowledged) alerts, newest first (FR-015).
+
+    The front end calls this on login and every dashboard load.
+    """
+
+    serializer_class = AlertSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return (
+            Alert.objects.filter(user=self.request.user, acknowledged=False)
+            .select_related("budget__category")
+            .order_by("-created_at")
+        )
+
+
+class AlertAcknowledgeView(APIView):
+    """POST /api/v1/alerts/<id>/acknowledge/ -> marks one of the caller's alerts as seen (FR-015).
+
+    It then disappears from GET /api/v1/alerts/. Another user's alert gives 404, so ids cannot be probed.
+    """
+
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, pk):
+        alert = Alert.objects.filter(pk=pk, user=request.user).first()
+        if alert is None:
+            return Response({"detail": "Alert not found."}, status=status.HTTP_404_NOT_FOUND)
+        alert.acknowledged = True
+        alert.save(update_fields=["acknowledged"])
+        return Response(AlertSerializer(alert).data)

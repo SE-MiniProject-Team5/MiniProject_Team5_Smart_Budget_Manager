@@ -1,0 +1,17 @@
+Name                                 Stmts   Miss Branch BrPart  Cover
+----------------------------------------------------------------------
+budgets/__init__.py                      0      0      0      0   100%
+budgets/admin.py                         1      0      0      0   100%
+budgets/alerts.py                       27      1     14      2    93%
+budgets/apps.py                          6      0      0      0   100%
+budgets/migrations/0001_initial.py      10      0      0      0   100%
+budgets/migrations/__init__.py           0      0      0      0   100%
+budgets/models.py                       27      0      0      0   100%
+budgets/permissions.py                   5      0      0      0   100%
+budgets/serializers.py                  38      0      6      0   100%
+budgets/services.py                     30      0     12      0   100%
+budgets/signals.py                      12      0      0      0   100%
+budgets/urls.py                          3      0      0      0   100%
+budgets/views.py                        50      0      6      0   100%
+----------------------------------------------------------------------
+TOTAL                                  209      1     38      2    99%
