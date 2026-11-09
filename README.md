@@ -1,6 +1,6 @@
 # SmartSpend: Smart Expense and Budget Manager
 
-SmartSpend (Team H5, UE24CS341A Software Engineering) helps a user record expenses, organise them by category,
+**SmartSpend** helps a user record expenses, organise them by category,
 set weekly or monthly budgets, get alerts at 80% and 100% of a budget, and see where the money goes.
 Administrators manage the master category list and see anonymised usage totals.
 
