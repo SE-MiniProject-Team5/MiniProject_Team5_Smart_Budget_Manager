@@ -66,3 +66,39 @@ All primary keys are UUIDs. Amounts are `Decimal(10,2)`, never floating point (S
 | Alert | id, user, budget, threshold_type ("80" or "100"), created_at, acknowledged | Same | - |
 
 Computed, not stored: a budget's `spent`, `remaining` and `end_date` are worked out on every request from the expenses (FR-011), so a new expense shows up at once (TC-NFR-01).
+
+## 4. Requirement status at v1.0 (SRS)
+
+Every requirement in the SRS is implemented. Test results for the Test Plan cases are in [TEST_RESULTS.md](TEST_RESULTS.md); RTM code references are in [RTM.md](RTM.md).
+
+| Requirement | Status | Main code | Tests |
+|---|---|---|---|
+| FR-001 Register | Implemented | `accounts/views.py` RegisterView | `tests/test_register.py` |
+| FR-002 Reject duplicate email | Implemented | `accounts/services.py` register_user | `tests/test_register.py`, `tests/test_auth_units.py` |
+| FR-003 Log in | Implemented | `accounts/views.py` LoginView | `tests/test_login.py` |
+| FR-004 Token valid at most 24 h | Implemented | `accounts/tokens.py` | `tests/test_login.py`, `tests/test_token_units.py` |
+| FR-005 Add expense | Implemented | `expenses/views.py` ExpenseListCreateView | `tests/test_expenses.py` |
+| FR-006 Edit or delete own expense | Implemented | `expenses/views.py` ExpenseDetailView | `tests/test_expense_edit.py` |
+| FR-007 Custom categories | Implemented | `expenses/views.py` CategoryListCreateView | `tests/test_categories.py` |
+| FR-008 Reject amount of 0 or less | Implemented | `expenses/models.py`, `expenses/serializers.py` | `tests/test_expenses.py`, `tests/test_expense_api_rules.py` |
+| FR-009 Create budget | Implemented | `budgets/views.py` BudgetListCreateView | `tests/test_budgets.py` |
+| FR-010 Edit budget | Implemented | `budgets/views.py` BudgetDetailView | `tests/test_budget_edit.py` |
+| FR-011 Live spent and remaining | Implemented | `budgets/services.py` spent_for | `tests/test_budget_spend.py`, `tests/test_threshold_timing.py` |
+| FR-012 No overlapping budgets | Implemented | `budgets/services.py` overlaps_existing | `tests/test_budgets.py` |
+| FR-013 Alert at 80% | Implemented | `budgets/alerts.py` | `tests/test_alert_rules.py`, `tests/test_alert_trigger.py` |
+| FR-014 Alert when exceeded | Implemented | `budgets/alerts.py` | `tests/test_alert_rules.py` |
+| FR-015 List and acknowledge alerts | Implemented | `budgets/views.py` AlertListView, AlertAcknowledgeView | `tests/test_alert_list.py`, `tests/test_alert_acknowledge.py` |
+| FR-016 Spend by category | Implemented | `reports/services.py` category_breakdown | `tests/test_analytics.py` |
+| FR-017 Daily or weekly trend | Implemented | `reports/services.py` spend_trend | `tests/test_trend.py` |
+| FR-018 CSV export | Implemented | `reports/views.py` ExportCsvView | `tests/test_export.py` |
+| FR-019 Admin manages master categories | Implemented | `reports/views.py` AdminCategory views | `tests/test_admin_categories.py` |
+| FR-020 Anonymised usage totals | Implemented | `reports/services.py` admin_usage_stats | `tests/test_admin_analytics.py` |
+| FR-021 Admin-only access | Implemented | `smartspend/permissions.py` IsAdminRole | `tests/test_admin_categories.py`, `tests/test_admin_analytics.py` |
+| NFR-001 95% under 2 s at 50 users | Implemented | `reports/views.py` CategoryBreakdownView | `scripts/load_test.py`, `docs/perf/nfr001_results.txt` |
+| NFR-002 Recalculation under 1 s | Implemented | `budgets/services.py`, `budgets/signals.py` | `tests/test_threshold_timing.py` |
+| SEC-001 Password hashing | Implemented | `accounts/services.py` | `tests/test_register.py` |
+| SEC-002 RBAC | Implemented | `smartspend/permissions.py` | `tests/test_security.py` |
+| SEC-003 Input validation | Implemented | `expenses/validators.py` | `tests/test_input_validation.py`, `tests/test_expense_units.py` |
+| SEC-004 Invalid token gives 401 | Implemented | `accounts/authentication.py` | `tests/test_tokens.py` |
+| SEC-005 Security logging | Implemented | `smartspend/security_log.py` | `tests/test_security.py`, `tests/test_login.py` |
+| SEC-006 No sensitive fields | Implemented | `accounts/serializers.py` UserSerializer | `tests/test_no_sensitive_fields.py`, `tests/test_me.py` |
