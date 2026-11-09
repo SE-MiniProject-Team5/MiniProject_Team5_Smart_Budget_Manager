@@ -52,3 +52,17 @@ Security additions made during Sprint 2:
 - SEC-003: free text is trimmed and rejected (400) if it contains control characters or `<` `>` (`expenses/validators.py`).
 - SEC-006: users are always returned through an allow-list serializer of `id`, `email`, `role` (`accounts/serializers.py`).
 - FR-018: CSV cells that start with `=`, `+`, `-` or `@` get a `'` in front, so a spreadsheet never runs them as formulas (`reports/views.py` `safe_cell`).
+
+## 3. Data design (SAD Section 10, SRS Appendix B), as built
+
+All primary keys are UUIDs. Amounts are `Decimal(10,2)`, never floating point (SAD 8.1).
+
+| Entity | Fields in the code | Change from documents | DEVIATIONS # |
+|---|---|---|---|
+| User | id, email (unique), username, password (salted hash), role (USER or ADMIN), is_active | `username` added; password hash is in Django's `password` field | 5 |
+| Category | id, name (max 50), is_active, owner (empty for master categories) | Same | - |
+| Expense | id, user, category, amount (> 0), expense_date, note (max 255), created_at | `created_at` added to order expenses saved on the same day | - |
+| Budget | id, user, category, limit_amount (> 0), period (WEEKLY or MONTHLY), start_date | End date is computed (weekly: start + 6 days; monthly: last day of month), not stored | - |
+| Alert | id, user, budget, threshold_type ("80" or "100"), created_at, acknowledged | Same | - |
+
+Computed, not stored: a budget's `spent`, `remaining` and `end_date` are worked out on every request from the expenses (FR-011), so a new expense shows up at once (TC-NFR-01).
