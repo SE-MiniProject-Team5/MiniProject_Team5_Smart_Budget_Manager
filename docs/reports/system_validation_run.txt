@@ -1,0 +1,29 @@
+SmartSpend system validation (Test Plan Section 4 system testing and Section 5.1 security validation)
+Server: http://127.0.0.1:8000/api/v1
+
+[PASS] Journey: Create a 1000 monthly budget (HTTP 201)
+[PASS] Journey: Add three expenses totalling 850 (HTTP 201)
+[PASS] Journey: 80% alert is listed by GET /alerts/ (HTTP 200, alerts ['80'])
+[PASS] Journey: Budget shows spent 850.00 and remaining 150.00 (spent 850.00, remaining 150.00)
+[PASS] Journey: Acknowledged alert leaves the active list (HTTP 200, active after: 0)
+[PASS] 5.1 Confidentiality: Another user's GET expenses/<id>/ is rejected (HTTP 403 (expected 403))
+[PASS] 5.1 Confidentiality: Another user's PATCH expenses/<id>/ is rejected (HTTP 403 (expected 403))
+[PASS] 5.1 Confidentiality: Another user's DELETE expenses/<id>/ is rejected (HTTP 403 (expected 403))
+[PASS] 5.1 Confidentiality: Another user's GET budgets/<id>/ is rejected (HTTP 403 (expected 403))
+[PASS] 5.1 Confidentiality: Another user's PATCH budgets/<id>/ is rejected (HTTP 403 (expected 403))
+[PASS] 5.1 Confidentiality: Another user's DELETE budgets/<id>/ is rejected (HTTP 403 (expected 403))
+[PASS] 5.1 Confidentiality: Owner's budget unchanged after those attempts (limit 1000.00)
+[PASS] 5.1 Confidentiality: No response contains a password hash, the raw password or the signing secret (7 responses checked, leaks: none)
+[PASS] 5.1 Integrity: Expense amount 0 rejected (HTTP 400 (expected 400))
+[PASS] 5.1 Integrity: Negative expense amount rejected (HTTP 400 (expected 400))
+[PASS] 5.1 Integrity: Overlapping budget period rejected (HTTP 409 (expected 409))
+[PASS] 5.1 Integrity: User token on GET /admin/categories/ rejected (HTTP 403 (expected 403))
+[PASS] 5.1 Integrity: User token on POST /admin/categories/ rejected (HTTP 403 (expected 403))
+[PASS] 5.1 Integrity: User token on PATCH /admin/categories/<id>/ rejected (HTTP 403 (expected 403))
+[PASS] 5.1 Integrity: User token on GET /admin/analytics/ rejected (HTTP 403 (expected 403))
+[PASS] 5.1 Accountability: 3 failed logins logged with timestamp and account (3 failed_login lines for target-8a353c@smartspend.test)
+[PASS] 5.1 Accountability: Unauthorized admin call logged with timestamp and account (1 unauthorized_admin_access line(s))
+[PASS] 5.1 Accountability: No password appears anywhere in the security log (checked security.log)
+
+Checks passed: 23/23
+Result: PASS
