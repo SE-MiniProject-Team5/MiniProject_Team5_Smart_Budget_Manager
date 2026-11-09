@@ -1,0 +1,280 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.6, pytest-9.2.0, pluggy-1.7.0 -- C:\Users\srira\Documents\SE_MiniProject\.venv\Scripts\python.exe
+cachedir: .pytest_cache
+django: version: 5.2.18, settings: smartspend.settings (from ini)
+rootdir: C:\Users\srira\Documents\SE_MiniProject
+configfile: pytest.ini
+plugins: cov-7.1.0, django-4.14.0
+collecting ... collected 207 items
+
+tests/test_admin_analytics.py::test_admin_sees_totals_only PASSED        [  0%]
+tests/test_admin_analytics.py::test_regular_user_gets_403 PASSED         [  0%]
+tests/test_admin_analytics.py::test_anonymous_gets_401 PASSED            [  1%]
+tests/test_admin_categories.py::test_admin_lists_all_master_categories PASSED [  1%]
+tests/test_admin_categories.py::test_admin_adds_master_category PASSED   [  2%]
+tests/test_admin_categories.py::test_admin_renames_category PASSED       [  2%]
+tests/test_admin_categories.py::test_disabling_keeps_existing_expenses PASSED [  3%]
+tests/test_admin_categories.py::test_admin_cannot_delete_category PASSED [  3%]
+tests/test_admin_categories.py::test_users_own_category_is_not_managed_here PASSED [  4%]
+tests/test_admin_categories.py::test_blank_or_html_name_rejected PASSED  [  4%]
+tests/test_admin_categories.py::test_regular_user_gets_403 PASSED        [  5%]
+tests/test_alert_acknowledge.py::test_acknowledge_hides_alert PASSED     [  5%]
+tests/test_alert_acknowledge.py::test_cannot_acknowledge_someone_elses_alert PASSED [  6%]
+tests/test_alert_acknowledge.py::test_acknowledging_does_not_recreate_the_alert PASSED [  6%]
+tests/test_alert_list.py::test_lists_only_own_unacknowledged_alerts PASSED [  7%]
+tests/test_alert_list.py::test_alert_shows_up_after_spending_through_the_api PASSED [  7%]
+tests/test_alert_list.py::test_alerts_need_login PASSED                  [  8%]
+tests/test_alert_rules.py::test_warning_created_at_80_percent PASSED     [  8%]
+tests/test_alert_rules.py::test_no_alert_below_80_percent PASSED         [  9%]
+tests/test_alert_rules.py::test_exceeded_alert_above_100_percent PASSED  [  9%]
+tests/test_alert_rules.py::test_exactly_100_percent_does_not_create_exceeded_alert PASSED [ 10%]
+tests/test_alert_rules.py::test_alerts_are_not_duplicated PASSED         [ 10%]
+tests/test_alert_rules.py::test_evaluate_for_expense_checks_matching_budget PASSED [ 11%]
+tests/test_alert_trigger.py::test_expense_save_triggers_warning_alert PASSED [ 11%]
+tests/test_alert_trigger.py::test_expense_save_triggers_exceeded_alert PASSED [ 12%]
+tests/test_alert_trigger.py::test_expense_save_succeeds_if_alert_evaluation_fails PASSED [ 12%]
+tests/test_alerts.py::test_warning_alert_creation PASSED                 [ 13%]
+tests/test_alerts.py::test_exceeded_budget_alert_creation PASSED         [ 13%]
+tests/test_alerts.py::test_alert_can_be_acknowledged PASSED              [ 14%]
+tests/test_analytics.py::test_breakdown_groups_totals_by_category PASSED [ 14%]
+tests/test_analytics.py::test_dates_outside_range_are_ignored PASSED     [ 14%]
+tests/test_analytics.py::test_other_users_expenses_are_not_counted PASSED [ 15%]
+tests/test_analytics.py::test_bad_dates_give_400[params0] PASSED         [ 15%]
+tests/test_analytics.py::test_bad_dates_give_400[params1] PASSED         [ 16%]
+tests/test_analytics.py::test_bad_dates_give_400[params2] PASSED         [ 16%]
+tests/test_analytics.py::test_bad_dates_give_400[params3] PASSED         [ 17%]
+tests/test_analytics.py::test_anonymous_caller_refused PASSED            [ 17%]
+tests/test_auth_units.py::test_register_stores_a_hash_not_the_password PASSED [ 18%]
+tests/test_auth_units.py::test_register_rejects_same_email_in_other_case PASSED [ 18%]
+tests/test_auth_units.py::test_register_race_on_same_email_is_still_a_duplicate PASSED [ 19%]
+tests/test_auth_units.py::test_login_check_accepts_right_password_any_email_case PASSED [ 19%]
+tests/test_auth_units.py::test_login_check_rejects_wrong_password PASSED [ 20%]
+tests/test_auth_units.py::test_login_check_rejects_unknown_email PASSED  [ 20%]
+tests/test_auth_units.py::test_login_check_rejects_disabled_account PASSED [ 21%]
+tests/test_budget_edit.py::test_owner_can_change_limit PASSED            [ 21%]
+tests/test_budget_edit.py::test_editing_does_not_clash_with_itself PASSED [ 22%]
+tests/test_budget_edit.py::test_edit_into_another_budgets_period_gives_409 PASSED [ 22%]
+tests/test_budget_edit.py::test_edit_rejects_zero_limit PASSED           [ 23%]
+tests/test_budget_edit.py::test_owner_can_delete_budget PASSED           [ 23%]
+tests/test_budget_edit.py::test_other_user_cannot_edit_or_delete PASSED  [ 24%]
+tests/test_budget_edit.py::test_list_shows_only_own_budgets PASSED       [ 24%]
+tests/test_budget_spend.py::test_spent_and_remaining_are_returned PASSED [ 25%]
+tests/test_budget_spend.py::test_new_expense_is_reflected_on_next_request PASSED [ 25%]
+tests/test_budget_spent_fields.py::test_budget_detail_shows_spent_and_remaining PASSED [ 26%]
+tests/test_budget_spent_fields.py::test_new_budget_starts_with_nothing_spent PASSED [ 26%]
+tests/test_budget_units.py::test_overlapping_budget_is_detected PASSED   [ 27%]
+tests/test_budget_units.py::test_next_month_does_not_overlap PASSED      [ 27%]
+tests/test_budget_units.py::test_budget_being_edited_does_not_clash_with_itself PASSED [ 28%]
+tests/test_budget_units.py::test_spent_counts_only_this_budgets_period_category_and_user PASSED [ 28%]
+tests/test_budget_units.py::test_spent_is_zero_with_no_expenses PASSED   [ 28%]
+tests/test_budget_units.py::test_serializer_refuses_inactive_category PASSED [ 29%]
+tests/test_budget_units.py::test_just_under_80_percent_gives_no_alert PASSED [ 29%]
+tests/test_budget_units.py::test_exactly_100_percent_gives_only_the_warning PASSED [ 30%]
+tests/test_budget_units.py::test_jumping_past_100_percent_gives_both_alerts_once PASSED [ 30%]
+tests/test_budget_units.py::test_budget_is_shown_by_category_period_and_limit PASSED [ 31%]
+tests/test_budgets.py::test_create_monthly_budget PASSED                 [ 31%]
+tests/test_budgets.py::test_zero_budget_limit_rejected PASSED            [ 32%]
+tests/test_budgets.py::test_negative_budget_limit_rejected PASSED        [ 32%]
+tests/test_budgets.py::test_second_budget_same_month_rejected PASSED     [ 33%]
+tests/test_budgets.py::test_weekly_inside_monthly_rejected PASSED        [ 33%]
+tests/test_budgets.py::test_next_month_is_allowed PASSED                 [ 34%]
+tests/test_categories.py::test_list_shows_predefined_and_own_active_categories PASSED [ 34%]
+tests/test_categories.py::test_create_custom_category PASSED             [ 35%]
+tests/test_categories.py::test_name_longer_than_50_rejected PASSED       [ 35%]
+tests/test_categories.py::test_blank_name_rejected PASSED                [ 36%]
+tests/test_categories.py::test_anonymous_caller_refused PASSED           [ 36%]
+tests/test_expense_api_rules.py::test_category_name_of_only_spaces_is_refused PASSED [ 37%]
+tests/test_expense_api_rules.py::test_category_name_over_50_characters_is_refused PASSED [ 37%]
+tests/test_expense_api_rules.py::test_zero_amount_is_refused PASSED      [ 38%]
+tests/test_expense_api_rules.py::test_negative_amount_is_refused PASSED  [ 38%]
+tests/test_expense_api_rules.py::test_note_is_saved_trimmed PASSED       [ 39%]
+tests/test_expense_api_rules.py::test_a_user_sees_only_their_own_expenses PASSED [ 39%]
+tests/test_expense_edit.py::test_owner_can_edit_expense PASSED           [ 40%]
+tests/test_expense_edit.py::test_owner_can_change_one_field PASSED       [ 40%]
+tests/test_expense_edit.py::test_edit_still_rejects_zero_amount PASSED   [ 41%]
+tests/test_expense_edit.py::test_owner_can_delete_expense PASSED         [ 41%]
+tests/test_expense_edit.py::test_other_user_cannot_edit_or_delete PASSED [ 42%]
+tests/test_expense_edit.py::test_unknown_id_gives_404 PASSED             [ 42%]
+tests/test_expense_units.py::test_active_predefined_category_is_allowed PASSED [ 42%]
+tests/test_expense_units.py::test_inactive_category_is_refused PASSED    [ 43%]
+tests/test_expense_units.py::test_own_custom_category_is_allowed PASSED  [ 43%]
+tests/test_expense_units.py::test_someone_elses_category_is_refused PASSED [ 44%]
+tests/test_expense_units.py::test_category_is_shown_by_name PASSED       [ 44%]
+tests/test_expense_units.py::test_expense_is_shown_by_date_and_amount PASSED [ 45%]
+tests/test_expenses.py::test_add_valid_expense_returns_201 PASSED        [ 45%]
+tests/test_expenses.py::test_zero_or_negative_amount_rejected[0] PASSED  [ 46%]
+tests/test_expenses.py::test_zero_or_negative_amount_rejected[-5] PASSED [ 46%]
+tests/test_expenses.py::test_note_longer_than_255_rejected PASSED        [ 47%]
+tests/test_expenses.py::test_inactive_category_rejected PASSED           [ 47%]
+tests/test_expenses.py::test_other_users_custom_category_rejected PASSED [ 48%]
+tests/test_expenses.py::test_own_custom_category_allowed PASSED          [ 48%]
+tests/test_expenses.py::test_owner_in_json_is_ignored PASSED             [ 49%]
+tests/test_expenses.py::test_list_shows_only_own_expenses PASSED         [ 49%]
+tests/test_expenses.py::test_anonymous_caller_refused PASSED             [ 50%]
+tests/test_export.py::test_export_returns_csv_of_own_expenses_in_range PASSED [ 50%]
+tests/test_export.py::test_formula_like_text_is_neutralised PASSED       [ 51%]
+tests/test_export.py::test_export_bad_dates_give_400 PASSED              [ 51%]
+tests/test_export.py::test_export_needs_login PASSED                     [ 52%]
+tests/test_input_validation.py::test_html_in_note_rejected[<script>alert(1)</script>] PASSED [ 52%]
+tests/test_input_validation.py::test_html_in_note_rejected[<b>bold</b>] PASSED [ 53%]
+tests/test_input_validation.py::test_html_in_note_rejected[a > b] PASSED [ 53%]
+tests/test_input_validation.py::test_control_characters_in_note_rejected[line1\nline2] PASSED [ 54%]
+tests/test_input_validation.py::test_control_characters_in_note_rejected[tab\there] PASSED [ 54%]
+tests/test_input_validation.py::test_control_characters_in_note_rejected[null\x00byte] PASSED [ 55%]
+tests/test_input_validation.py::test_note_is_trimmed PASSED              [ 55%]
+tests/test_input_validation.py::test_html_in_category_name_rejected PASSED [ 56%]
+tests/test_input_validation.py::test_html_rejected_on_edit_too PASSED    [ 56%]
+tests/test_input_validation.py::test_malformed_values_rejected[overrides0] PASSED [ 57%]
+tests/test_input_validation.py::test_malformed_values_rejected[overrides1] PASSED [ 57%]
+tests/test_input_validation.py::test_malformed_values_rejected[overrides2] PASSED [ 57%]
+tests/test_input_validation.py::test_malformed_values_rejected[overrides3] PASSED [ 58%]
+tests/test_input_validation.py::test_malformed_values_rejected[overrides4] PASSED [ 58%]
+tests/test_input_validation.py::test_malformed_values_rejected[overrides5] PASSED [ 59%]
+tests/test_input_validation.py::test_malformed_values_rejected[overrides6] PASSED [ 59%]
+tests/test_input_validation.py::test_missing_required_field_rejected[category] PASSED [ 60%]
+tests/test_input_validation.py::test_missing_required_field_rejected[amount] PASSED [ 60%]
+tests/test_input_validation.py::test_missing_required_field_rejected[expense_date] PASSED [ 61%]
+tests/test_input_validation.py::test_body_that_is_not_json_object_rejected PASSED [ 61%]
+tests/test_login.py::test_login_with_valid_credentials_returns_token PASSED [ 62%]
+tests/test_login.py::test_token_lifetime_is_at_most_24_hours PASSED      [ 62%]
+tests/test_login.py::test_login_email_ignores_capital_letters PASSED     [ 63%]
+tests/test_login.py::test_wrong_password_gives_401_and_is_logged PASSED  [ 63%]
+tests/test_login.py::test_unknown_email_gives_401 PASSED                 [ 64%]
+tests/test_login.py::test_missing_password_gives_400 PASSED              [ 64%]
+tests/test_me.py::test_me_returns_only_safe_fields PASSED                [ 65%]
+tests/test_me.py::test_me_needs_login PASSED                             [ 65%]
+tests/test_me.py::test_register_response_has_only_safe_fields PASSED     [ 66%]
+tests/test_no_sensitive_fields.py::test_no_endpoint_leaks_secrets PASSED [ 66%]
+tests/test_no_sensitive_fields.py::test_error_responses_do_not_leak PASSED [ 67%]
+tests/test_register.py::test_register_success_returns_201_and_creates_user PASSED [ 67%]
+tests/test_register.py::test_password_is_stored_hashed PASSED            [ 68%]
+tests/test_register.py::test_short_password_rejected_with_400 PASSED     [ 68%]
+tests/test_register.py::test_invalid_email_rejected_with_400 PASSED      [ 69%]
+tests/test_register.py::test_duplicate_email_rejected_with_409_ignoring_case PASSED [ 69%]
+tests/test_register.py::test_response_never_contains_password PASSED     [ 70%]
+tests/test_report_units.py::test_breakdown_is_largest_first_with_grand_total PASSED [ 70%]
+tests/test_report_units.py::test_breakdown_of_empty_range_is_zero PASSED [ 71%]
+tests/test_report_units.py::test_daily_trend_lists_every_day_with_zeros PASSED [ 71%]
+tests/test_report_units.py::test_weekly_trend_groups_from_monday PASSED  [ 71%]
+tests/test_report_units.py::test_export_rows_are_oldest_first_and_inside_range PASSED [ 72%]
+tests/test_report_units.py::test_usage_stats_are_counts_only PASSED      [ 72%]
+tests/test_security.py::test_regular_user_gets_403_and_is_logged PASSED  [ 73%]
+tests/test_security.py::test_admin_user_is_allowed PASSED                [ 73%]
+tests/test_smoke.py::test_duplicate_email_rejected PASSED                [ 74%]
+tests/test_smoke.py::test_expense_amount_must_be_positive PASSED         [ 74%]
+tests/test_threshold_timing.py::test_spend_and_alert_update_within_one_second PASSED [ 75%]
+tests/test_token_units.py::test_token_round_trip_gives_back_the_user_id PASSED [ 75%]
+tests/test_token_units.py::test_tampered_token_is_refused PASSED         [ 76%]
+tests/test_token_units.py::test_token_older_than_the_limit_is_refused PASSED [ 76%]
+tests/test_token_units.py::test_user_is_shown_by_email PASSED            [ 77%]
+tests/test_token_units.py::test_bearer_header_with_extra_parts_gives_401 PASSED [ 77%]
+tests/test_token_units.py::test_other_auth_schemes_are_ignored_and_give_401 PASSED [ 78%]
+tests/test_tokens.py::test_valid_token_is_accepted PASSED                [ 78%]
+tests/test_tokens.py::test_no_token_gives_401 PASSED                     [ 79%]
+tests/test_tokens.py::test_malformed_token_gives_401_and_is_logged PASSED [ 79%]
+tests/test_tokens.py::test_expired_token_gives_401 PASSED                [ 80%]
+tests/test_tokens.py::test_token_of_deleted_user_gives_401 PASSED        [ 80%]
+tests/test_trend.py::test_daily_trend_lists_every_day_with_zeros PASSED  [ 81%]
+tests/test_trend.py::test_weekly_trend_groups_by_monday PASSED           [ 81%]
+tests/test_trend.py::test_bad_parameters_give_400[params0] PASSED        [ 82%]
+tests/test_trend.py::test_bad_parameters_give_400[params1] PASSED        [ 82%]
+tests/test_trend.py::test_bad_parameters_give_400[params2] PASSED        [ 83%]
+tests/test_trend.py::test_bad_parameters_give_400[params3] PASSED        [ 83%]
+tests/test_trend.py::test_trend_needs_login PASSED                       [ 84%]
+tests/test_budget_units.py::test_weekly_budget_ends_six_days_later PASSED [ 84%]
+tests/test_budget_units.py::test_monthly_budget_ends_on_last_day_of_month PASSED [ 85%]
+tests/test_budget_units.py::test_monthly_budget_in_leap_year_february PASSED [ 85%]
+tests/test_budget_units.py::test_category_rule_allows_active_predefined PASSED [ 85%]
+tests/test_budget_units.py::test_category_rule_refuses_inactive PASSED   [ 86%]
+tests/test_budget_units.py::test_category_rule_refuses_someone_elses PASSED [ 86%]
+tests/test_budget_units.py::test_serializer_refuses_zero_limit PASSED    [ 87%]
+tests/test_budget_units.py::test_serializer_refuses_unknown_period PASSED [ 87%]
+tests/test_expense_units.py::test_clean_text_trims_spaces PASSED         [ 88%]
+tests/test_expense_units.py::test_clean_text_keeps_normal_punctuation PASSED [ 88%]
+tests/test_expense_units.py::test_clean_text_rejects_control_characters[a\tb] PASSED [ 89%]
+tests/test_expense_units.py::test_clean_text_rejects_control_characters[a\nb] PASSED [ 89%]
+tests/test_expense_units.py::test_clean_text_rejects_control_characters[a\x00b] PASSED [ 90%]
+tests/test_expense_units.py::test_clean_text_rejects_control_characters[a\x7fb] PASSED [ 90%]
+tests/test_expense_units.py::test_clean_text_rejects_angle_brackets[<b>] PASSED [ 91%]
+tests/test_expense_units.py::test_clean_text_rejects_angle_brackets[a < b] PASSED [ 91%]
+tests/test_expense_units.py::test_clean_text_rejects_angle_brackets[x>y] PASSED [ 92%]
+tests/test_layout.py::test_home_page_has_nav PASSED                      [ 92%]
+tests/test_layout.py::test_form_errors_partial_shows_field_error PASSED  [ 93%]
+tests/test_layout.py::test_form_errors_partial_empty_for_valid_form PASSED [ 93%]
+tests/test_report_units.py::test_safe_cell_disarms_formulas[=SUM(A1)] PASSED [ 94%]
+tests/test_report_units.py::test_safe_cell_disarms_formulas[+1] PASSED   [ 94%]
+tests/test_report_units.py::test_safe_cell_disarms_formulas[-1] PASSED   [ 95%]
+tests/test_report_units.py::test_safe_cell_disarms_formulas[@cmd] PASSED [ 95%]
+tests/test_report_units.py::test_safe_cell_leaves_normal_text_alone PASSED [ 96%]
+tests/test_report_units.py::test_admin_category_name_is_trimmed PASSED   [ 96%]
+tests/test_report_units.py::test_admin_category_bad_names_are_refused[   ] PASSED [ 97%]
+tests/test_report_units.py::test_admin_category_bad_names_are_refused[<b>Rent</b>] PASSED [ 97%]
+tests/test_security.py::test_anonymous_is_refused_and_logged PASSED      [ 98%]
+tests/test_security.py::test_log_entry_has_timestamp_account_and_endpoint PASSED [ 98%]
+tests/test_smoke.py::test_health_endpoint PASSED                         [ 99%]
+tests/test_smoke.py::test_home_page_renders PASSED                       [ 99%]
+tests/test_token_units.py::test_token_lifetime_is_24_hours PASSED        [100%]
+
+- generated xml file: C:\Users\srira\Documents\SE_MiniProject\docs\reports\unit_tests.xml -
+=============================== tests coverage ================================
+_______________ coverage: platform win32, python 3.12.6-final-0 _______________
+
+Name                                  Stmts   Miss Branch BrPart  Cover   Missing
+---------------------------------------------------------------------------------
+accounts\__init__.py                      0      0      0      0   100%
+accounts\admin.py                         1      0      0      0   100%
+accounts\apps.py                          4      0      0      0   100%
+accounts\authentication.py               25      0      4      0   100%
+accounts\migrations\0001_initial.py       9      0      0      0   100%
+accounts\migrations\__init__.py           0      0      0      0   100%
+accounts\models.py                       14      0      0      0   100%
+accounts\serializers.py                  17      0      0      0   100%
+accounts\services.py                     15      0      4      0   100%
+accounts\tokens.py                        8      0      0      0   100%
+accounts\urls.py                          3      0      0      0   100%
+accounts\views.py                        35      0      2      0   100%
+budgets\__init__.py                       0      0      0      0   100%
+budgets\admin.py                          1      0      0      0   100%
+budgets\alerts.py                        27      1     14      2    93%   19, 60->57
+budgets\apps.py                           6      0      0      0   100%
+budgets\migrations\0001_initial.py       10      0      0      0   100%
+budgets\migrations\__init__.py            0      0      0      0   100%
+budgets\models.py                        27      0      0      0   100%
+budgets\permissions.py                    5      0      0      0   100%
+budgets\serializers.py                   38      0      6      0   100%
+budgets\services.py                      30      0     12      0   100%
+budgets\signals.py                       12      0      0      0   100%
+budgets\urls.py                           3      0      0      0   100%
+budgets\views.py                         50      0      6      0   100%
+expenses\__init__.py                      0      0      0      0   100%
+expenses\admin.py                         1      0      0      0   100%
+expenses\apps.py                          4      0      0      0   100%
+expenses\migrations\0001_initial.py      10      0      0      0   100%
+expenses\migrations\__init__.py           0      0      0      0   100%
+expenses\models.py                       24      0      0      0   100%
+expenses\permissions.py                   5      0      0      0   100%
+expenses\serializers.py                  29      1      4      1    94%   42
+expenses\services.py                      6      0      4      0   100%
+expenses\urls.py                          3      0      0      0   100%
+expenses\validators.py                    9      0      4      0   100%
+expenses\views.py                        25      0      0      0   100%
+reports\__init__.py                       0      0      0      0   100%
+reports\admin.py                          1      0      0      0   100%
+reports\apps.py                           4      0      0      0   100%
+reports\migrations\__init__.py            0      0      0      0   100%
+reports\models.py                         1      0      0      0   100%
+reports\serializers.py                   17      1      4      1    90%   17
+reports\services.py                      24      0      2      0   100%
+reports\urls.py                           3      0      0      0   100%
+reports\views.py                         71      0     14      0   100%
+smartspend\__init__.py                    0      0      0      0   100%
+smartspend\asgi.py                        4      4      0      0     0%   10-16
+smartspend\permissions.py                12      0      2      0   100%
+smartspend\security_log.py                4      0      0      0   100%
+smartspend\settings.py                   25      1      2      1    93%   56
+smartspend\urls.py                        4      0      0      0   100%
+smartspend\views.py                       6      0      0      0   100%
+smartspend\wsgi.py                        4      4      0      0     0%   10-16
+---------------------------------------------------------------------------------
+TOTAL                                   636     12     84      5    98%
+======================= 207 passed in 82.69s (0:01:22) ========================
