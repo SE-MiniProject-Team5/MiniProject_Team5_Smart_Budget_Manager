@@ -19,11 +19,7 @@ RUN = uuid.uuid4().hex[:6]
 EMAIL = f"demo-{RUN}@smartspend.test"
 ADMIN_EMAIL = f"admin-{RUN}@smartspend.test"
 PASSWORD = "Passw0rd!"
-<<<<<<< HEAD
-PAUSE = 4  # seconds to read each step in the video
-=======
 PAUSE = 5  # seconds to read each step in the video
->>>>>>> origin/main
 
 
 def call(method, path, body=None, token=None):
