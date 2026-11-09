@@ -29,3 +29,26 @@ All paths are under `/api/v1/` and end with a slash (DEVIATIONS #7). Every endpo
 | GET | `/health/` | Liveness check for Docker and CI | No | - | Added | - |
 
 Status codes follow SAD 8.1: 200/201 success, 400 validation error, 401 missing or invalid token, 403 wrong role or not the owner, 404 not found, 409 overlapping budget.
+
+## 2. Components (SAD Sections 3.1, 4, 5 and 9), as built
+
+Each SAD component is a Django app or module. The layers of SAD Section 4 map to Django as: views (API/Controller), serializers and `services.py` (Business Logic), Django ORM models (Data Access), and the database (Data).
+
+| SAD component | Where it is in the code | Change from SAD | DEVIATIONS # |
+|---|---|---|---|
+| Web UI / Dashboard | `templates/`, `smartspend/views.py` | Django templates instead of a separate browser front end | 4 |
+| Auth API + Auth Service | `accounts/` (`views.py`, `services.py`, `tokens.py`, `authentication.py`) | Token is a Django signed token, not a JWT | 8 |
+| Expense API + Expense Service | `expenses/` (`views.py`, `serializers.py`, `services.py`, `validators.py`) | Input sanitiser `validators.py` added for SEC-003 | 16 |
+| Budget API + Budget Service | `budgets/` (`views.py`, `serializers.py`, `services.py`) | Budgets also return computed `spent`, `remaining`, `end_date` | - |
+| Alert Engine | `budgets/alerts.py`, triggered by `budgets/signals.py` | Runs from a post_save signal on Expense, inside budgets/ | 14 |
+| Report Service + Analytics/Admin API | `reports/` (`services.py`, `views.py`, `serializers.py`) | Admin category management lives here with the other admin endpoints | 10 |
+| Repository / ORM Layer | Django ORM models in each app's `models.py` | Django ORM used directly as the repository layer | - |
+| Logging / Monitoring | `smartspend/security_log.py`, written to `logs/security.log` | Same | - |
+| RBAC (SAD 5) | `smartspend/permissions.py` `IsAdminRole` | Same | - |
+| Error handling (SAD 9) | DRF ValidationError (400), `budgets/views.py` `BudgetConflict` (409) | Fewer typed exceptions than listed in SAD 9 | 15 |
+
+Security additions made during Sprint 2:
+
+- SEC-003: free text is trimmed and rejected (400) if it contains control characters or `<` `>` (`expenses/validators.py`).
+- SEC-006: users are always returned through an allow-list serializer of `id`, `email`, `role` (`accounts/serializers.py`).
+- FR-018: CSV cells that start with `=`, `+`, `-` or `@` get a `'` in front, so a spreadsheet never runs them as formulas (`reports/views.py` `safe_cell`).
