@@ -28,3 +28,33 @@ General changes that apply to every case:
 | TC-SEC-01 | Auth | Password never stored in plaintext | New user registered | 1. Read the user record from the database | n/a | Stored password is a salted hash, never the raw password | `tests/test_register.py::test_password_is_stored_hashed` | Hash is in Django's `password` field (DEVIATIONS #5) |
 | TC-SEC-02 | Admin API | User role blocked from Admin endpoint | Logged in as a regular User | 1. `POST /api/v1/admin/categories/` with the User token | User-role token | 403 Forbidden; the attempt is logged | `tests/test_admin_categories.py::test_regular_user_gets_403`, `tests/test_security.py::test_regular_user_gets_403_and_is_logged` | Exact endpoint path; logging check added (SEC-005) |
 | TC-SEC-03 | Auth | Expired token rejected on protected endpoint | A token older than 24 hours | 1. `GET /api/v1/expenses/` with that token | Expired token; also a malformed token | 401 Unauthorized; the attempt is logged | `tests/test_tokens.py::test_expired_token_gives_401`, `tests/test_tokens.py::test_malformed_token_gives_401_and_is_logged` | Malformed token case added |
+
+## Part B: new test cases for Sprint 2 features
+
+All of these were executed by the named automated tests in the final `pytest` run (see [reports/UNIT_TEST_REPORT.md](reports/UNIT_TEST_REPORT.md)).
+
+| ID | Module | Requirement | Description | Precondition | Steps | Test Data | Expected Result | Executed by | Actual Result | Result |
+|---|---|---|---|---|---|---|---|---|---|---|
+| TC-FUN-09 | Alert | FR-014 | Second, distinct alert when the budget is exceeded | Food budget of 1000 | 1. Add an expense taking spend above 1000 2. Check alerts | One expense of 1100 | Both a "80% of budget reached" and a "Budget exceeded" alert exist | `tests/test_alert_trigger.py::test_expense_save_triggers_exceeded_alert` | Both alerts created | Pass |
+| TC-FUN-10 | Alert | FR-015 | Acknowledge an alert | User has one active alert | 1. `POST /api/v1/alerts/<id>/acknowledge/` 2. `GET /api/v1/alerts/` | The alert's id | 200 OK; the alert no longer appears in the active list; another user's alert id gives 404 | `tests/test_alert_acknowledge.py::test_acknowledge_hides_alert`, `tests/test_alert_acknowledge.py::test_cannot_acknowledge_someone_elses_alert` | Alert hidden after acknowledging; another user's alert gives 404 | Pass |
+| TC-FUN-11 | Analytics | FR-017 | Weekly spend trend | User has expenses on different days | 1. `GET /api/v1/analytics/trend/?from=&to=&granularity=weekly` | A range covering two weeks | 200 OK; one total per week, weeks starting on Monday, 0.00 for weeks with no spend | `tests/test_trend.py::test_weekly_trend_groups_by_monday`, `tests/test_trend.py::test_daily_trend_lists_every_day_with_zeros` | Totals grouped by week from Monday; empty days and weeks show 0.00 | Pass |
+| TC-FUN-12 | Report | FR-018 | CSV export of expenses for a period | User has expenses inside and outside the range | 1. `GET /api/v1/reports/export/?from=&to=` | One month | 200 OK; `text/csv` file of only this user's expenses in the range, oldest first; cells starting with = + - @ are escaped | `tests/test_export.py::test_export_returns_csv_of_own_expenses_in_range`, `tests/test_export.py::test_formula_like_text_is_neutralised` | CSV has only the user's in-range expenses; formula-like text starts with ' | Pass |
+| TC-FUN-13 | Admin | FR-020, FR-021 | Anonymised usage totals for admins | Logged in as Admin | 1. `GET /api/v1/admin/analytics/` as Admin 2. Same call as a User | Admin token, then User token | Admin: 200 OK with counts only, no emails, names or per-user amounts. User: 403 | `tests/test_admin_analytics.py::test_admin_sees_totals_only`, `tests/test_admin_analytics.py::test_regular_user_gets_403` | Admin sees totals only; User gets 403 | Pass |
+| TC-SEC-04 | Expense | SEC-003 | Unsafe input rejected server-side | Logged in | 1. `POST /api/v1/expenses/` with HTML in the note 2. With control characters 3. With malformed values | note=`<script>alert(1)</script>`, a note with a tab, amount=abc | 400 Bad Request each time; nothing saved | `tests/test_input_validation.py::test_html_in_note_rejected`, `tests/test_input_validation.py::test_control_characters_in_note_rejected`, `tests/test_input_validation.py::test_malformed_values_rejected` | 400 for each; no record saved | Pass |
+| TC-SEC-05 | Auth | SEC-006 | No sensitive fields in responses | Logged in | 1. `GET /api/v1/auth/me/` 2. Call every endpoint and search the responses | n/a | Only id, email, role returned; no response contains a password hash, the raw password or the signing secret | `tests/test_me.py::test_me_returns_only_safe_fields`, `tests/test_no_sensitive_fields.py::test_no_endpoint_leaks_secrets` | Only safe fields returned; no secret found in any response | Pass |
+| TC-SEC-06 | Auth, Admin | SEC-005 | Security events are logged | Server running | 1. Log in with a wrong password 2. Call an Admin endpoint as a User 3. Read the security log | Wrong password; User token | Each event is logged with a timestamp, the account and the endpoint; no password in the log | `tests/test_login.py::test_wrong_password_gives_401_and_is_logged`, `tests/test_security.py::test_log_entry_has_timestamp_account_and_endpoint` | Both events logged with timestamp, account and endpoint | Pass |
+
+## Coverage of requirements by test cases
+
+| Requirement area | Test cases |
+|---|---|
+| Auth (FR-001 to FR-004) | TC-FUN-01, TC-FUN-02, TC-SEC-03 |
+| Expenses (FR-005 to FR-008) | TC-FUN-03, TC-FUN-04 |
+| Budgets (FR-009 to FR-012) | TC-FUN-05, TC-NFR-01 |
+| Alerts (FR-013 to FR-015) | TC-FUN-06, TC-FUN-09, TC-FUN-10 |
+| Reports (FR-016 to FR-018) | TC-FUN-07, TC-FUN-11, TC-FUN-12 |
+| Admin (FR-019 to FR-021) | TC-FUN-08, TC-FUN-13, TC-SEC-02 |
+| Non-functional (NFR-001, NFR-002) | TC-NFR-02, TC-NFR-01 |
+| Security (SEC-001 to SEC-006) | TC-SEC-01 to TC-SEC-06 |
+
+Requirements without their own test case here (for example FR-006, FR-007, FR-010) are covered by the automated unit and API tests listed in [reports/UNIT_TEST_REPORT.md](reports/UNIT_TEST_REPORT.md).
