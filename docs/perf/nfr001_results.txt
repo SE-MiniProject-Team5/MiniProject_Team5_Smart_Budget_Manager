@@ -1,8 +1,8 @@
 NFR-001 load test (Test Plan TC-NFR-02)
 Endpoint: GET /api/v1/analytics/?from=2026-01-01&to=2026-01-31
 Concurrent users: 50, requests per user: 10, total: 500
-Successful (HTTP 200): 486/500
-Median: 0.193 s   95th percentile: 1.719 s   slowest: 2.299 s
-Within 2 s: 96.4% (required: 95%)
-Total time: 6.1 s
-Result: FAIL
+Successful (HTTP 200): 500/500
+Median: 0.046 s   95th percentile: 0.562 s   slowest: 2.059 s
+Within 2 s: 99.8% (required: 95%)
+Total time: 2.3 s
+Result: PASS
